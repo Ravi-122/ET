@@ -18,7 +18,7 @@ s = URLSafeTimedSerializer(app.secret_key)
 
 # SQLite database in /tmp for Vercel
 db_path = os.path.join("/tmp", "app.db")
-app.config['SQLALCHEMY_DATABASE_URI'] = f"sqlite:///{db_path}"
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:////tmp/mydatabase.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 migrate = Migrate(app, db)
