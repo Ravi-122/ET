@@ -19,11 +19,12 @@ app = Flask(__name__)
 app.secret_key = 'your_secret_key'  # Needed for session management
 s = URLSafeTimedSerializer(app.secret_key)
 
-basedir = os.path.abspath(os.path.dirname(__file__))
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + os.path.join(basedir, 'app.db')
+# /tmp is writable on Vercel
+db_path = os.path.join("/tmp", "app.db")
+app.config['SQLALCHEMY_DATABASE_URI'] = f'sqlite:///{db_path}'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
-migrate=Migrate(app,db)
+migrate = Migrate(app, db)
 
 login_manager = LoginManager()       # ✅ separate object
 login_manager.init_app(app)          # attach to app
