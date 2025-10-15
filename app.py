@@ -18,14 +18,10 @@ s = URLSafeTimedSerializer(app.secret_key)
 
 # SQLite database in /tmp for Vercel
 db_path = "/tmp/app.db"
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:////tmp/app.db'
+app.config['SQLALCHEMY_DATABASE_URI'] = f"sqlite:///tmp/app.db"
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 migrate = Migrate(app, db)
-
-with app.app_context():
-    db.create_all()
-
 
 # Flask-Login
 login_manager = LoginManager()
