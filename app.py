@@ -12,14 +12,20 @@ import os
 import json
 
 # ----------------- APP CONFIG -----------------
-app = Flask(__name__)
+app = Flask(__name__, instance_path="/tmp")
 app.secret_key = os.environ.get("SECRET_KEY", secrets.token_hex(16))
 s = URLSafeTimedSerializer(app.secret_key)
-os.makedirs(app.instance_path,exist_ok=True)
-# SQLite database in /tmp for Vercel
+
+# ✅ Ensure /tmp exists
+os.makedirs(app.instance_path, exist_ok=True)
+
+# ✅ Correct database path in /tmp
 db_path = os.path.join(app.instance_path, "app.db")
-app.config['SQLALCHEMY_DATABASE_URI'] = f"sqlite:///tmp/app.db"
+
+# ✅ Use absolute path with 4 slashes after sqlite:
+app.config['SQLALCHEMY_DATABASE_URI'] = f"sqlite:////{db_path}"
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+
 db = SQLAlchemy(app)
 migrate = Migrate(app, db)
 
