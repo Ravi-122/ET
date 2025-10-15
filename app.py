@@ -15,9 +15,9 @@ import json
 app = Flask(__name__)
 app.secret_key = os.environ.get("SECRET_KEY", secrets.token_hex(16))
 s = URLSafeTimedSerializer(app.secret_key)
-
+os.makedirs(app.instance_path,exist_ok=True)
 # SQLite database in /tmp for Vercel
-db_path = "/tmp/app.db"
+db_path = os.path.join(app.instance_path, "app.db")
 app.config['SQLALCHEMY_DATABASE_URI'] = f"sqlite:///tmp/app.db"
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
