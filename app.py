@@ -50,8 +50,10 @@ class User(UserMixin, db.Model):
     email = db.Column(db.String(100), unique=True, nullable=False)
     password = db.Column(db.String(200), nullable=False)
     user_type = db.Column(db.String(20), nullable=False)
-with app.app_context():
-    db.create_all()
+@app.before_request()
+def ensure db():
+    with app.app_context():
+        db.create_all()
 
 class Expenses(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -131,7 +133,7 @@ def signup():
 @app.route("/login", methods=["GET", "POST"])
 def login():
     if request.method == "POST":
-        username = request.form['username']
+        username = request.form['username'].strip().lower()
         password = request.form['password']
 
         user = User.query.filter_by(username=username).first()
